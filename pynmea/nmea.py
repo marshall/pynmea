@@ -1,6 +1,13 @@
 import re
 from pynmea.utils import checksum_calc
 
+sentence_types = {}
+
+def nmea_sentence(sentence_type):
+    global sentence_types
+    sentence_types['$' + sentence_type.__name__] = sentence_type
+    return sentence_type
+
 class NMEASentence(object):
     """ Base sentence class. This is used to pull apart a sentence.
         It will not have any real reference to what things mean. Things that
@@ -72,6 +79,7 @@ class NMEASentence(object):
 # supported. They are being added as properties and other useful functions are
 # implimented. Unit tests are also provided.
 # ---------------------------------------------------------------------------- #
+@nmea_sentence
 class GPAAM(NMEASentence):
     """ Waypoint Arrival Alarm
     """
@@ -86,6 +94,7 @@ class GPAAM(NMEASentence):
         super(GPAAM, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPALM(NMEASentence):
     """ GPS Almanac data
     """
@@ -109,6 +118,7 @@ class GPALM(NMEASentence):
         super(GPALM, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPAPA(NMEASentence):
     """ Autopilot Sentence "A"
     """
@@ -129,6 +139,7 @@ class GPAPA(NMEASentence):
         super(GPAPA, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPAPB(NMEASentence):
     """ Autopilot Sentence "B"
     """
@@ -153,6 +164,7 @@ class GPAPB(NMEASentence):
         super(GPAPB, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPBEC(NMEASentence):
     """ Bearing & Distance to Waypoint, Dead Reckoning
     """
@@ -175,6 +187,7 @@ class GPBEC(NMEASentence):
         super(GPBEC, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPBOD(NMEASentence):
     def __init__(self):
         # 045.,T,023.,M,DEST,START
@@ -204,6 +217,7 @@ class GPBOD(NMEASentence):
         return self.start
 
 
+@nmea_sentence
 class GPBWC(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -224,6 +238,7 @@ class GPBWC(NMEASentence):
         super(GPBWC, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPBWR(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -244,6 +259,7 @@ class GPBWR(NMEASentence):
         super(GPBWR, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPGGA(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -266,6 +282,7 @@ class GPGGA(NMEASentence):
         super(GPGGA, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPBWW(NMEASentence):
     """ Bearing, Waypoint to Waypoint
     """
@@ -281,6 +298,7 @@ class GPBWW(NMEASentence):
         super(GPBWW, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPGLL(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -366,6 +384,7 @@ class GPGLL(NMEASentence):
         return mapping[self.lon_dir.upper()]
 
 
+@nmea_sentence
 class GPGSA(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -391,6 +410,7 @@ class GPGSA(NMEASentence):
         super(GPGSA, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPGSV(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -418,6 +438,7 @@ class GPGSV(NMEASentence):
         super(GPGSV, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPHDG(NMEASentence):
     """ NOTE! This is a GUESS as I cannot find an actual spec
         telling me the fields. Updates are welcome!
@@ -434,6 +455,7 @@ class GPHDG(NMEASentence):
         super(GPHDG, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPHDT(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -444,6 +466,7 @@ class GPHDT(NMEASentence):
         super(GPHDT, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPR00(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -469,6 +492,7 @@ class GPR00(NMEASentence):
             setattr(self, self.parse_map[index][1], item)
 
 
+@nmea_sentence
 class GPRMA(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -488,6 +512,7 @@ class GPRMA(NMEASentence):
         super(GPRMA, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPRMB(NMEASentence):
     """ Recommended Minimum Navigation Information
     """
@@ -510,6 +535,7 @@ class GPRMB(NMEASentence):
         super(GPRMB, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPRMC(NMEASentence):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
@@ -529,6 +555,7 @@ class GPRMC(NMEASentence):
         super(GPRMC, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPRTE(NMEASentence):
     """ Routes
     """
@@ -560,6 +587,7 @@ class GPRTE(NMEASentence):
             setattr(self, self.parse_map[index][1], item)
 
 
+@nmea_sentence
 class GPSTN(NMEASentence):
     """ NOTE: No real data could be found for examples of the actual spec so
             it is a guess that there may be a checksum on the end
@@ -573,6 +601,7 @@ class GPSTN(NMEASentence):
         super(GPSTN, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPTRF(NMEASentence):
     """ Transit Fix Data
     """
@@ -593,6 +622,7 @@ class GPTRF(NMEASentence):
         super(GPTRF, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPVBW(NMEASentence):
     """ Dual Ground/Water Speed
     """
@@ -608,6 +638,7 @@ class GPVBW(NMEASentence):
         super(GPVBW, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPVTG(NMEASentence):
     """ Track Made Good and Ground Speed
     """
@@ -625,6 +656,7 @@ class GPVTG(NMEASentence):
         super(GPVTG, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPWCV(NMEASentence):
     """ Waypoint Closure Velocity
     """
@@ -637,6 +669,7 @@ class GPWCV(NMEASentence):
         super(GPWCV, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPWNC(NMEASentence):
     """ Distance, Waypoint to Waypoint
     """
@@ -652,6 +685,7 @@ class GPWNC(NMEASentence):
         super(GPWNC, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPWPL(NMEASentence):
     """ Waypoint Location
     """
@@ -666,6 +700,7 @@ class GPWPL(NMEASentence):
         super(GPWPL, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPXTE(NMEASentence):
     """ Cross-Track Error, Measured
     """
@@ -679,6 +714,7 @@ class GPXTE(NMEASentence):
         super(GPXTE, self).__init__(parse_map)
 
 
+@nmea_sentence
 class GPZDA(NMEASentence):
     def __init__(self):
         parse_map = (
@@ -912,6 +948,7 @@ class GPZDA(NMEASentence):
 # PROPRIETRY SENTENCES
 
 # -- GARMIN -- #
+@nmea_sentence
 class PGRME(NMEASentence):
     """ GARMIN Estimated position error
     """
@@ -926,6 +963,7 @@ class PGRME(NMEASentence):
         super(PGRME, self).__init__(parse_map)
 
 
+@nmea_sentence
 class PGRMM(NMEASentence):
     """ GARMIN Map Datum
     """
@@ -935,6 +973,7 @@ class PGRMM(NMEASentence):
         super(PGRMM, self).__init__(parse_map)
 
 
+@nmea_sentence
 class PGRMZ(NMEASentence):
     """ GARMIN Altitude Information
     """
@@ -945,3 +984,13 @@ class PGRMZ(NMEASentence):
                       "pos_fix_dim"))
 
         super(PGRMZ, self).__init__(parse_map)
+
+def parse_sentence(sentence):
+    sentence_obj = None
+    for prefix, sentence_type in sentence_types.iteritems():
+        if sentence.startswith(prefix):
+            sentence_obj = sentence_type()
+            sentence_obj.parse(sentence)
+            break
+
+    return sentence_obj
